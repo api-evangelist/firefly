@@ -1,8 +1,26 @@
 aid: firefly
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/firefly.png
 name: Firefly
-description: Firefly is a company surfaced as a portfolio company of 500-global, a16z, gv and added to
-  the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment
-  pipeline.
+description: Firefly Systems Inc. is a data-first moving out-of-home (mOOH) advertising network
+  that turns taxis, rideshare vehicles, and other mobility assets into digital and static advertising
+  surfaces across 15+ major North American markets and several countries. Its network of tens of
+  thousands of GPS-connected screens delivers geo-targeted, contextual, and programmatic digital
+  out-of-home (DOOH) campaigns with advanced tracking, attribution, and measurement. Firefly offers
+  digital and static car tops, full and partial car wraps, in-car TaxiTV, around-car activations, and
+  experiential LED and hologram truck formats, and supports programmatic buying through its VIOOH
+  integration. The company is backed by investors including 500 Global, Andreessen Horowitz (a16z),
+  and GV (Google Ventures).
 url: https://raw.githubusercontent.com/api-evangelist/firefly/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -14,9 +32,18 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
 - Company
+- Advertising
+- Digital Out-of-Home
+- DOOH
+- Mobility
+- Advertising Technology
+- AdTech
+- Marketing
+- Measurement
+- Programmatic Advertising
 apis: []
 maintainers:
 - FN: Kin Lane
@@ -26,3 +53,18 @@ maintainers:
 common:
 - type: Website
   url: https://fireflyon.com
+- type: Blog
+  url: https://fireflyon.com/blog
+- type: Support
+  url: https://fireflyon.com/contact
+- type: PrivacyPolicy
+  url: https://fireflyon.com/privacy-policy
+- type: TermsOfService
+  url: https://fireflyon.com/advertising-terms-and-conditions
+- type: DomainSecurity
+  url: security/firefly-domain-security.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
