@@ -1,0 +1,41 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Firefly
+providerId: firefly
+generated: '2026-08-12'
+created: '2026-08-12'
+modified: '2026-08-12'
+method: searched
+source: >-
+  https://www.fireflyon.com/sitemap.xml (HTTP 200, no developer or reference pages),
+  https://www.fireflyon.com/developers (HTTP 404), https://www.fireflyon.com/docs (HTTP 404),
+  live header inspection of https://app-gw.api.fireflyon.com/
+limit_count: 0
+limits: []
+headers: {}
+responseCodes: {}
+description: >-
+  Firefly documents no rate limits, because Firefly documents no API. There is no
+  developer portal, no API reference and no OpenAPI on any Firefly host. The only live
+  Firefly API surface found is the advertiser-dashboard gateway
+  https://app-gw.api.fireflyon.com, which answers every unauthenticated request with
+  HTTP 404 text/plain "404 page not found" (Go net/http default) and emits no
+  RateLimit-*, X-RateLimit-* or Retry-After header on that response, so no runtime
+  throttling signal can be observed anonymously either.
+observed_headers_on_unauthenticated_response: []
+note: >-
+  limit_count is a measured zero, not an unchecked field. No `RateLimits` pointer is
+  emitted in apis.yml: that pointer asserts the provider publishes a rate-limit signal,
+  and Firefly publishes none. Recording the honest zero here keeps the finding
+  re-checkable without crediting an absence as a presence.
+x-evidence:
+  fetched: '2026-08-12'
+  probes:
+  - url: https://app-gw.api.fireflyon.com/
+    status: 404
+    note: text/plain, 18 bytes, no rate-limit headers present.
+  - url: https://www.fireflyon.com/developers
+    status: 404
+  - url: https://www.fireflyon.com/docs
+    status: 404

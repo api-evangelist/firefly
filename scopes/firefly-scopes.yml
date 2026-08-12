@@ -1,0 +1,104 @@
+generated: '2026-08-12'
+method: probed
+source: https://auth.fireflyon.com/.well-known/openid-configuration
+docs: null
+description: >-
+  The complete scopes_supported list published by Firefly's Auth0 custom-domain tenant,
+  read verbatim from the live OpenID Connect discovery document (HTTP 200, 2026-08-12)
+  and saved at well-known/firefly-openid-configuration.json. IMPORTANT READING NOTE:
+  every scope below is a standard OpenID Connect / Auth0 profile claim scope. Firefly
+  publishes NO product or resource scopes (nothing shaped like campaign:read,
+  inventory:write, reporting:export), and no scope reference page exists anywhere on
+  fireflyon.com. Authorization for the advertiser dashboard gateway
+  (audience https://gw.fireflyon.com) is therefore not expressed through discoverable
+  scopes; whatever permission model it uses is not publicly readable. This artifact
+  records the identity scopes that ARE published, and records the absence of API scopes
+  as the finding.
+schemes:
+- name: firefly-dashboard-oidc
+  type: openIdConnect
+  issuer: https://auth.fireflyon.com/
+  openIdConnectUrl: https://auth.fireflyon.com/.well-known/openid-configuration
+  grant_types:
+  - authorization_code
+  - client_credentials
+  - refresh_token
+  - urn:ietf:params:oauth:grant-type:device_code
+  pkce: S256
+scope_count: 14
+scopes:
+- scope: openid
+  description: Standard OIDC scope — requests an ID token for the authenticated subject.
+  standard: openid-connect-core
+  schemes: [firefly-dashboard-oidc]
+- scope: profile
+  description: Standard OIDC scope — the default profile claim set (name, family_name, given_name, nickname, picture, updated_at).
+  standard: openid-connect-core
+  schemes: [firefly-dashboard-oidc]
+- scope: offline_access
+  description: Standard OIDC scope — requests a refresh token for long-lived access.
+  standard: openid-connect-core
+  schemes: [firefly-dashboard-oidc]
+- scope: email
+  description: Standard OIDC scope — releases the email claim.
+  standard: openid-connect-core
+  schemes: [firefly-dashboard-oidc]
+- scope: address
+  description: Standard OIDC scope — releases the address claim.
+  standard: openid-connect-core
+  schemes: [firefly-dashboard-oidc]
+- scope: phone
+  description: Standard OIDC scope — releases the phone_number claim.
+  standard: openid-connect-core
+  schemes: [firefly-dashboard-oidc]
+- scope: name
+  description: Auth0 granular profile scope — releases the name claim alone.
+  standard: auth0-profile-scope
+  schemes: [firefly-dashboard-oidc]
+- scope: given_name
+  description: Auth0 granular profile scope — releases the given_name claim alone.
+  standard: auth0-profile-scope
+  schemes: [firefly-dashboard-oidc]
+- scope: family_name
+  description: Auth0 granular profile scope — releases the family_name claim alone.
+  standard: auth0-profile-scope
+  schemes: [firefly-dashboard-oidc]
+- scope: nickname
+  description: Auth0 granular profile scope — releases the nickname claim alone.
+  standard: auth0-profile-scope
+  schemes: [firefly-dashboard-oidc]
+- scope: picture
+  description: Auth0 granular profile scope — releases the picture claim alone.
+  standard: auth0-profile-scope
+  schemes: [firefly-dashboard-oidc]
+- scope: email_verified
+  description: Auth0 granular profile scope — releases the email_verified claim alone.
+  standard: auth0-profile-scope
+  schemes: [firefly-dashboard-oidc]
+- scope: created_at
+  description: Auth0 granular profile scope — releases the account created_at claim.
+  standard: auth0-profile-scope
+  schemes: [firefly-dashboard-oidc]
+- scope: identities
+  description: Auth0 granular profile scope — releases the linked-identities claim.
+  standard: auth0-profile-scope
+  schemes: [firefly-dashboard-oidc]
+findings:
+- id: no-product-scopes-published
+  severity: informational
+  detail: >-
+    Zero of the 14 published scopes describe a Firefly resource. An integrator or agent
+    cannot determine, from anything Firefly publishes, what an access token for
+    https://gw.fireflyon.com is permitted to do.
+  evidence:
+  - url: https://auth.fireflyon.com/.well-known/openid-configuration
+    status: 200
+  - url: https://app-gw.api.fireflyon.com/.well-known/oauth-protected-resource
+    status: 404
+x-evidence:
+  fetched: '2026-08-12'
+  probes:
+  - url: https://auth.fireflyon.com/.well-known/openid-configuration
+    status: 200
+  - url: https://auth.fireflyon.com/.well-known/oauth-authorization-server
+    status: 200

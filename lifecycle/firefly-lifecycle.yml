@@ -1,0 +1,74 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://www.fireflyon.com/sitemap.xml (HTTP 200), https://www.fireflyon.com/status (HTTP 404),
+  DNS lookup of status.fireflyon.com (NXDOMAIN),
+  https://fireflyon.statuspage.io/ (HTTP 302 to www.statuspage.io — unclaimed subdomain, not a Firefly page),
+  https://www.fireflyon.com/advertising-terms-and-conditions (HTTP 200)
+description: >-
+  Firefly publishes no API lifecycle surface. There is no version scheme, no deprecation
+  policy, no Sunset/Deprecation header practice, no changelog and no status page. This
+  follows from the same root fact recorded in x-coverage: Firefly ships no public API
+  and no developer site, so there is nothing to version or deprecate publicly. The file
+  records the measured absences so a later round can detect the moment any of them
+  appear.
+versioning:
+  scheme: null
+  mechanism: null
+  docs: null
+  notes: >-
+    No versioning policy is published. The advertiser-dashboard gateway
+    app-gw.api.fireflyon.com exposes no version prefix that can be read anonymously —
+    /v1/openapi.json 404s exactly like every other path.
+deprecation:
+  policy_url: null
+  changelog: null
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  notes: >-
+    No deprecation or sunset policy is published. No `Deprecation` pointer is emitted in
+    apis.yml.
+sla:
+  url: null
+  public_uptime_target: null
+  notes: >-
+    No uptime commitment is published. The advertising terms and conditions at
+    https://www.fireflyon.com/advertising-terms-and-conditions govern media delivery, not
+    API or platform availability.
+status_page: null
+status_page_notes: >-
+  status.fireflyon.com is NXDOMAIN and https://www.fireflyon.com/status returns 404. Both
+  fireflyon.statuspage.io and firefly.statuspage.io 302 to https://www.statuspage.io/,
+  which is Atlassian's response for an unclaimed subdomain, not a Firefly status page —
+  recorded here so a later round does not mistake the wildcard DNS answer for a hit. No
+  `StatusPage` pointer is emitted.
+changelog: null
+changelog_notes: >-
+  No dated changelog or release-notes page exists. https://www.fireflyon.com/blog and
+  https://www.fireflydooh.com/articles are marketing and press archives, not product
+  change records, and neither is versioned.
+deprecated_products: []
+company_lifecycle_events:
+  note: >-
+    Corporate rather than API lifecycle, captured from Firefly's own press archive because
+    it explains the shape of the estate (multiple brand domains, an acquired UK business).
+  events:
+  - date: '2020'
+    event: Acquisition of Curb Taxi Media.
+    source: https://www.fireflydooh.com/articles/firefly-supercharges-out-of-home-advertising-network-through-acquisition-of-curb-taxi-media-8t9fx
+  - event: Acquisition of Ubiquitous, the UK's leading taxi OOH advertising company; Firefly's UK entry.
+    source: https://www.fireflyon.com/blog/firefly-launches-in-the-uk-through-the-acquisition-of-uks-leading-taxi-ooh-advertising-company-ubiquitous
+  - event: Launch in Mexico, extending the network into Latin America.
+    source: https://www.fireflyon.com/blog/firefly-launches-in-mexico-pioneering-the-future-of-out-of-home-across-latin-america
+x-evidence:
+  fetched: '2026-08-12'
+  probes:
+  - url: https://www.fireflyon.com/status
+    status: 404
+  - url: https://fireflyon.statuspage.io/
+    status: 302
+    note: redirects to https://www.statuspage.io/ — unclaimed subdomain.
+  - url: https://www.fireflyon.com/sitemap.xml
+    status: 200
+    note: 90 URLs; no changelog, release-notes, status or versioning page among them.

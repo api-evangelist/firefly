@@ -1,0 +1,54 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Firefly
+providerId: firefly
+generated: '2026-08-12'
+created: '2026-08-12'
+modified: '2026-08-12'
+method: searched
+source: >-
+  https://www.fireflyon.com/sitemap.xml (HTTP 200, 90 URLs, no pricing page),
+  https://www.fireflyon.com/pricing (HTTP 404), https://www.fireflyon.com/plans (HTTP 404),
+  https://www.fireflyon.com/advertising-solutions (HTTP 200),
+  https://www.fireflyon.com/contact (HTTP 200)
+plan_count: 0
+plans: []
+description: >-
+  Firefly publishes no plans, no rate card and no price of any kind. Every commercial
+  route on both fireflyon.com and fireflydooh.com terminates in a contact form or a
+  named sales inbox: the advertising-solutions page routes buyers to sales, and the
+  2022 programmatic announcement directs technical/programmatic inquiries to
+  programmatic@fireflyon.com. Media is sold either as an insertion order through the
+  Firefly sales team or programmatically as Programmatic Guaranteed / open-marketplace
+  deals negotiated inside third-party DOOH SSPs (Place Exchange, Vistar Media,
+  Hivestack, Broadsign), where the price lives in the deal, not on a public page. There
+  is no self-serve tier, no free tier, no trial, and no published CPM.
+pricing_model: contact-sales
+self_serve: false
+free_tier: false
+trial: false
+public_rate_card: false
+sales_contacts:
+- channel: web form
+  url: https://www.fireflyon.com/contact
+- channel: email
+  address: programmatic@fireflyon.com
+  context: programmatic / DOOH buyer inquiries
+  source: https://www.fireflydooh.com/articles/firefly-launches-solution-for-programmatic-dooh-buyers-to-maximize-success-on-campaigns-9lzja
+note: >-
+  plan_count is a measured zero, not an unchecked field. No `Plans` pointer is emitted
+  in apis.yml: a pointer asserts that the provider publishes plans, and Firefly does
+  not. This file exists so the absence is recorded and re-checkable rather than looking
+  like the pipeline skipped the step.
+x-evidence:
+  fetched: '2026-08-12'
+  probes:
+  - url: https://www.fireflyon.com/pricing
+    status: 404
+  - url: https://www.fireflyon.com/plans
+    status: 404
+  - url: https://www.fireflyon.com/sitemap.xml
+    status: 200
+  - url: https://www.fireflyon.com/advertising-solutions
+    status: 200

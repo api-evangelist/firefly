@@ -1,0 +1,384 @@
+generated: '2026-08-12'
+method: probed
+source: live GET of /.well-known/* and /llms.txt on every Firefly host discovered from
+  apis.yml, DNS enumeration, and the advertiser-dashboard SPA runtime config
+summary: >-
+  Firefly serves exactly one real /.well-known/ surface, and it is not on the marketing
+  site: the Auth0 custom-domain tenant at https://auth.fireflyon.com publishes a full
+  OpenID Connect discovery document and a byte-identical RFC 8414 OAuth authorization-server
+  metadata document. Both are saved here verbatim. Everything else misses — no security.txt
+  on any host, no api-catalog, no ai-plugin.json, no A2A agent card, no llms.txt, and no
+  OAuth protected-resource metadata. The marketing site (Squarespace) and the API gateway
+  return honest 404s. The advertiser-dashboard SPA at app.fireflyon.com answers HTTP 200
+  with its React shell for EVERY path including a nonsense control path, so none of its
+  200s are documents; they are recorded below as soft-404 false positives, not as hits.
+hosts:
+- host: https://auth.fireflyon.com
+  role: >-
+    Auth0 custom-domain tenant (CNAME -> fireflyon-cd-p4enovzjyobijetz.edge.tenants.auth0.com).
+    The identity provider behind the Firefly advertiser dashboard.
+  control_path: /.well-known/zzz-nonexistent-abc
+  control_status: 404
+  control_note: >-
+    Control returns 404 text/plain "Not found." — this host does NOT answer /.well-known/*
+    with a catch-all, so the 200s below are real documents.
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: application/json; charset=utf-8
+    bytes: 2501
+    file: firefly-openid-configuration.json
+    description: >-
+      OpenID Connect discovery for the Firefly advertiser dashboard. issuer
+      https://auth.fireflyon.com/, authorization/token/userinfo/revocation/device-code
+      endpoints, dynamic client registration endpoint, 14 scopes_supported, PKCE S256.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json; charset=utf-8
+    bytes: 2501
+    file: firefly-oauth-authorization-server.json
+    description: >-
+      RFC 8414 authorization server metadata — verified byte-identical (SHA-256 match)
+      to the OIDC discovery document above.
+  - path: /.well-known/jwks.json
+    status: 200
+    content_type: application/json; charset=utf-8
+    bytes: 3088
+    description: >-
+      Live JWKS — RSA signing keys for the tenant. Not saved: key material rotates, and
+      the jwks_uri in the discovery document is the canonical, always-current reference.
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /llms.txt
+    status: 404
+- host: https://www.fireflyon.com
+  role: Marketing site (Squarespace). fireflyon.com 301s here.
+  control_path: /.well-known/zzz-nonexistent-abc
+  control_status: 404
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    note: >-
+      Answers application/json {"message":"security.txt not found"} — a Squarespace
+      platform response, not a Firefly document.
+  - path: /security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /llms.txt
+    status: 404
+  - path: /openapi.json
+    status: 404
+  - path: /robots.txt
+    status: 200
+    note: >-
+      Stock Squarespace robots.txt. Names ~28 AI/agent crawlers (GPTBot, ClaudeBot,
+      anthropic-ai, CCBot, Google-Extended, Bytespider, Meta-ExternalAgent, PerplexityBot
+      family and others) as User-agent groups. No Firefly-authored agent policy.
+- host: https://app-gw.api.fireflyon.com
+  role: >-
+    Live API gateway serving the advertiser dashboard. Discovered from
+    window.REACT_APP_API_PATH in the SPA runtime config at https://app.fireflyon.com/config.js.
+  control_path: /.well-known/zzz-nonexistent-abc
+  control_status: 404
+  control_note: >-
+    Returns text/plain "404 page not found" (Go net/http default) for every unauthenticated
+    path including / — real 404s, no catch-all. Auth0 audience for this gateway is
+    https://gw.fireflyon.com per the SPA config.
+  documents:
+  - path: /
+    status: 404
+  - path: /openapi.json
+    status: 404
+  - path: /openapi.yaml
+    status: 404
+  - path: /swagger.json
+    status: 404
+  - path: /v1/openapi.json
+    status: 404
+  - path: /api-docs
+    status: 404
+  - path: /docs
+    status: 404
+  - path: /redoc
+    status: 404
+  - path: /swagger-ui.html
+    status: 404
+  - path: /graphql
+    status: 404
+  - path: /health
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /llms.txt
+    status: 404
+- host: https://www.fireflydooh.com
+  role: >-
+    Second Firefly-operated marketing/press site (Squarespace, same nameservers and
+    Squarespace IP range as fireflyon.com). Added 2026-08-12 — this host was not probed
+    in the first round.
+  control_path: /.well-known/zzz-nonexistent-abc
+  control_status: 404
+  control_note: >-
+    Control returns a 404 with the Squarespace 404 page (90,846 bytes text/html), so the
+    host does not answer /.well-known/* with a 200 catch-all.
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    note: 'Squarespace platform JSON response {"message":"security.txt not found"}, not a Firefly document.'
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /openapi.json
+    status: 404
+  - path: /llms.txt
+    status: 404
+    note: 200-shaped path returns 404 with a zero-byte text/plain body.
+  - path: /robots.txt
+    status: 200
+    note: Stock Squarespace robots.txt, same as fireflyon.com. No Firefly-authored agent policy.
+  - path: /sitemap.xml
+    status: 200
+    note: 41,763 bytes. Carries the Firefly press archive under /articles/. No developer or API pages.
+- host: https://adops.fireflyon.com
+  role: >-
+    "Firefly Geometrics App" — an internal ad-operations React SPA. Discovered 2026-08-12
+    via DNS (dashboard.fireflyon.com CNAME chain names adops.fireflyon.com).
+  control_path: /.well-known/zzz-nonexistent-abc
+  control_status: 404
+  control_note: >-
+    Returns a 153-byte text/html 404 for every unknown path including the control, so
+    unlike app.fireflyon.com this host is NOT a soft-404 catch-all. Every probe below is
+    a real 404.
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /llms.txt
+    status: 404
+  - path: /openapi.json
+    status: 404
+  - path: /config.js
+    status: 200
+    content_type: application/javascript
+    note: >-
+      Public SPA runtime config. Names two further Firefly API hostnames —
+      geometrics.api.fireflyon.com (REACT_APP_GEOMETRICS_API_PATH) and
+      media-api.fireflyon.com (REACT_APP_MEDIA_API_PATH) — plus adm.fireflyon.com and an
+      Auth0 client id. NOT SAVED to this repo: the file also embeds live third-party
+      credentials (Google and Mapbox keys) that are not ours to redistribute. Recorded
+      here as a host-discovery lead only.
+- host: https://support.fireflyon.com
+  role: >-
+    Firefly help center — Zendesk (CNAME fireflytechnologies.zendesk.com). Discovered
+    2026-08-12.
+  control_path: /.well-known/zzz-nonexistent-abc
+  control_status: 404
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /hc/en-us
+    status: 403
+    note: >-
+      Cloudflare interstitial ("Just a moment...") answers our probe rather than the help
+      center. Existence and public readability were confirmed instead through the Zendesk
+      Help Center API, which is anonymous: GET
+      https://fireflytechnologies.zendesk.com/api/v2/help_center/en-us/categories.json
+      returns HTTP 200 with one category, "Drivers" (id 360001261133, created 2018-12-26,
+      updated 2024-10-01). The help center is driver-facing, not developer-facing.
+soft_404_hosts:
+- host: https://app.fireflyon.com
+  role: >-
+    Firefly advertiser dashboard — a React SPA behind Auth0. dashboard.fireflyon.com
+    redirects here. campaign.fireflyon.com and reporting.fireflyon.com resolve to the
+    same address (34.98.91.236).
+  control_path: /.well-known/zzz-nonexistent-abc
+  control_status: 200
+  verdict: false-positive
+  note: >-
+    This host answers HTTP 200 text/html with the identical 1,207-byte React shell for
+    EVERY path probed — including the nonsense control path. NO pointer is emitted for
+    this host and none of its 200s are counted as documents. Recorded so a later round
+    does not re-credit them.
+  paths_returning_shell_200:
+  - /.well-known/security.txt
+  - /security.txt
+  - /.well-known/openid-configuration
+  - /.well-known/oauth-authorization-server
+  - /.well-known/oauth-protected-resource
+  - /.well-known/api-catalog
+  - /.well-known/ai-plugin.json
+  - /.well-known/agent-card.json
+  - /.well-known/agent.json
+  - /.well-known/mcp.json
+  - /llms.txt
+findings:
+- id: only-identity-surface-is-machine-readable
+  severity: informational
+  detail: >-
+    The only machine-readable document Firefly publishes anywhere is its Auth0 discovery
+    metadata, and that is served by the Auth0 platform on Firefly's custom domain rather
+    than authored by Firefly. There is no OpenAPI, no llms.txt, no security.txt and no
+    agent card on any Firefly host.
+  evidence:
+  - url: https://auth.fireflyon.com/.well-known/openid-configuration
+    status: 200
+  - url: https://app-gw.api.fireflyon.com/openapi.json
+    status: 404
+- id: no-security-txt
+  severity: low
+  detail: >-
+    No security.txt on any host, and no vulnerability-disclosure or bug-bounty program
+    was found (probe-security-programs.py returned vdp=none trust=none). A security
+    researcher has no published channel; the only contact affordance is the general
+    https://www.fireflyon.com/contact form.
+  evidence:
+  - url: https://www.fireflyon.com/.well-known/security.txt
+    status: 404
+  - url: https://auth.fireflyon.com/.well-known/security.txt
+    status: 404
+  - url: https://app-gw.api.fireflyon.com/.well-known/security.txt
+    status: 404
+  - url: https://www.fireflydooh.com/.well-known/security.txt
+    status: 404
+- id: round-2-widened-the-host-set-and-still-found-no-contract
+  severity: informational
+  added: '2026-08-12'
+  detail: >-
+    The second round added four hosts the first round never saw — www.fireflydooh.com
+    (Firefly's second marketing domain), adops.fireflyon.com (the internal "Firefly
+    Geometrics" ad-ops SPA), adm.fireflyon.com (a 301 redirector to app.fireflyon.com)
+    and support.fireflyon.com (a Zendesk help center) — plus two further API hostnames
+    named in the adops SPA config, geometrics.api.fireflyon.com and
+    media-api.fireflyon.com. Both of those are NXDOMAIN from the public internet. No new
+    machine-readable document was found on any of them. The conclusion of round 1 stands
+    against a host set that is now twice as large.
+  evidence:
+  - url: https://adops.fireflyon.com/openapi.json
+    status: 404
+  - url: https://www.fireflydooh.com/openapi.json
+    status: 404
+  - url: https://adm.fireflyon.com/openapi.json
+    status: 301
+    note: 301 to https://app.fireflyon.com/openapi.json — a pure redirector, no documents of its own.
+- id: zendesk-help-center-is-driver-facing
+  severity: informational
+  added: '2026-08-12'
+  detail: >-
+    Firefly runs a Zendesk help center at support.fireflyon.com. Our direct probe is
+    answered by a Cloudflare interstitial (403), but the anonymous Zendesk Help Center API
+    confirms it is public and contains exactly one category, "Drivers". There is no
+    developer, API or integration category.
+  evidence:
+  - url: https://support.fireflyon.com/hc/en-us
+    status: 403
+  - url: https://fireflytechnologies.zendesk.com/api/v2/help_center/en-us/categories.json
+    status: 200
+x-evidence:
+  fetched: '2026-08-12'
+  rounds:
+  - round: 1
+    hosts_probed: 4
+  - round: 2
+    hosts_probed: 8
+    added_hosts:
+    - https://www.fireflydooh.com
+    - https://adops.fireflyon.com
+    - https://adm.fireflyon.com
+    - https://support.fireflyon.com
+  paths_probed_per_host: 11
+  control_probe: /.well-known/zzz-nonexistent-abc
+  real_documents_found: 3
+  real_documents_found_note: >-
+    Unchanged after round 2. All three are on auth.fireflyon.com: the OIDC discovery
+    document, the byte-identical RFC 8414 metadata, and the live JWKS.
+  host_discovery:
+  - method: apis.yml
+    result: fireflyon.com
+  - method: DNS enumeration of common developer subdomains
+    result: >-
+      dashboard/app/admin/auth/login/campaign/reporting/support resolve; api, developer,
+      developers, docs, portal, my, partners, status are NXDOMAIN.
+  - method: SPA runtime config https://app.fireflyon.com/config.js (HTTP 200)
+    result: >-
+      Named app-gw.api.fireflyon.com (REACT_APP_API_PATH), media.api.fireflyon.com
+      (REACT_APP_MEDIA_API_PATH, does not resolve), Auth0 audience https://gw.fireflyon.com
+      (does not resolve), and nine micro-frontend module hosts.
+  - method: SPA runtime config https://adops.fireflyon.com/config.js (HTTP 200)
+    added: '2026-08-12'
+    result: >-
+      Named geometrics.api.fireflyon.com (REACT_APP_GEOMETRICS_API_PATH) and
+      media-api.fireflyon.com (REACT_APP_MEDIA_API_PATH) — both NXDOMAIN — plus
+      adm.fireflyon.com, which resolves and 301s to app.fireflyon.com.
+  - method: web search for a Firefly developer portal, SDK or Postman collection
+    added: '2026-08-12'
+    result: >-
+      Every "Firefly API" result belongs to a DIFFERENT company — Adobe Firefly
+      (developer.adobe.com/firefly-services, GitHub org Firefly-Services), Firefly.ai
+      (docs.firefly.ai), Fireflies.ai (docs.fireflies.ai) and Firefly III
+      (api-docs.firefly-iii.org). None is Firefly Systems Inc. Nothing from any of them
+      was saved to this repo.

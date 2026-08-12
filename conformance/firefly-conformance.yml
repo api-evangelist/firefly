@@ -1,0 +1,141 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://auth.fireflyon.com/.well-known/openid-configuration (live, HTTP 200),
+  https://auth.fireflyon.com/.well-known/oauth-authorization-server (live, HTTP 200),
+  https://www.fireflyon.com/advertising-solutions,
+  https://www.fireflydooh.com/articles/firefly-launches-solution-for-programmatic-dooh-buyers-to-maximize-success-on-campaigns-9lzja,
+  https://www.fireflyon.com/privacy-policy,
+  security/firefly-domain-security.yml, well-known/firefly-well-known.yml
+description: >-
+  Cross-cutting standards conformance for Firefly Systems Inc. (fireflyon.com). Firefly
+  publishes no OpenAPI, no developer portal and no API reference, so nothing here is
+  derived from a contract — each entry is anchored to a live probe or to a claim on
+  Firefly's own pages. Where Firefly's inventory is transacted through a standard
+  (OpenRTB / DOOH), the standard is implemented by the third-party SSPs that carry the
+  inventory rather than by an endpoint Firefly publishes, and that distinction is
+  recorded rather than smoothed over.
+standards:
+- id: oidc
+  name: OpenID Connect Discovery 1.0
+  conforms: true
+  evidence: >-
+    https://auth.fireflyon.com/.well-known/openid-configuration returns HTTP 200
+    application/json with issuer, authorization_endpoint, token_endpoint,
+    userinfo_endpoint, jwks_uri and claims_supported. Control probe
+    /.well-known/zzz-nonexistent-abc returns 404, so this is a real document and not an
+    SPA catch-all. Saved verbatim at well-known/firefly-openid-configuration.json.
+- id: oauth2
+  name: OAuth 2.0
+  conforms: true
+  evidence: >-
+    Authorization-code, client-credentials, refresh-token, device-code and
+    token-exchange grants advertised in the discovery document; token and revocation
+    endpoints live.
+- id: rfc8414-as-metadata
+  name: RFC 8414 OAuth 2.0 Authorization Server Metadata
+  conforms: true
+  evidence: >-
+    https://auth.fireflyon.com/.well-known/oauth-authorization-server returns HTTP 200
+    and is byte-identical (SHA-256 match) to the OIDC discovery document.
+- id: rfc7636-pkce
+  name: RFC 7636 PKCE
+  conforms: true
+  evidence: 'code_challenge_methods_supported: ["S256","plain"] in the discovery document.'
+- id: rfc7591-dynamic-client-registration
+  name: RFC 7591 Dynamic Client Registration
+  conforms: true
+  evidence: 'registration_endpoint: https://auth.fireflyon.com/oidc/register advertised in discovery.'
+- id: rfc9728-protected-resource-metadata
+  name: RFC 9728 OAuth 2.0 Protected Resource Metadata
+  conforms: false
+  evidence: >-
+    https://app-gw.api.fireflyon.com/.well-known/oauth-protected-resource returns 404, as
+    does the same path on auth.fireflyon.com and www.fireflyon.com. A client cannot
+    discover the authorization server for the gateway from the gateway.
+- id: rfc9116-security-txt
+  name: RFC 9116 security.txt
+  conforms: false
+  evidence: >-
+    No /.well-known/security.txt on www.fireflyon.com (404), auth.fireflyon.com (404),
+    app-gw.api.fireflyon.com (404) or www.fireflydooh.com (404).
+    probe-security-programs.py returned vdp=none, so no
+    security/firefly-vulnerability-disclosure.yml artifact and no `Security` pointer are
+    written — there is no disclosure program to point at.
+- id: openapi
+  name: OpenAPI
+  conforms: false
+  evidence: >-
+    No OpenAPI/Swagger document at /openapi.json, /openapi.yaml, /swagger.json,
+    /v1/openapi.json, /api-docs, /docs or /redoc on any Firefly host, including the live
+    gateway app-gw.api.fireflyon.com (all 404 text/plain) and both marketing domains.
+- id: graphql
+  name: GraphQL
+  conforms: false
+  evidence: https://app-gw.api.fireflyon.com/graphql returns 404; no GraphQL surface found on any host.
+- id: asyncapi
+  name: AsyncAPI
+  conforms: false
+  evidence: No event, streaming or webhook surface is documented anywhere on fireflyon.com or fireflydooh.com.
+- id: mcp
+  name: Model Context Protocol
+  conforms: false
+  evidence: No /.well-known/mcp.json and no hosted MCP endpoint on any Firefly host (all 404).
+- id: a2a-agent-card
+  name: A2A Agent Card
+  conforms: false
+  evidence: >-
+    /.well-known/agent-card.json and /.well-known/agent.json return 404 on
+    www.fireflyon.com, auth.fireflyon.com, app-gw.api.fireflyon.com and
+    www.fireflydooh.com. No card exists, so none is authored — a2a/ is intentionally empty.
+- id: openrtb-dooh
+  name: IAB Tech Lab OpenRTB (DOOH extensions)
+  conforms: false
+  conforms_note: not-first-party
+  evidence: >-
+    Firefly's inventory IS transacted programmatically — its own advertising-solutions
+    page names Place Exchange, Vistar Media, Hivestack and Broadsign as the SSPs
+    carrying it, and its 2022-06-29 announcement describes a "Firefly Mediation Server"
+    that sends bid requests to Vistar, Place Exchange, Hivestack, Adomni and Magnite and
+    runs a header-bidding auction over the responses. But the OpenRTB endpoint a buyer
+    integrates against belongs to those SSPs, not to Firefly. Firefly publishes no
+    bid-request/bid-response schema, no supply endpoint, and no seller.json or ads.txt
+    equivalent on either of its domains. conforms is false because the check is "does
+    THIS provider publish a conformant contract", and it does not.
+  sources:
+  - https://www.fireflyon.com/advertising-solutions
+  - https://www.fireflydooh.com/articles/firefly-launches-solution-for-programmatic-dooh-buyers-to-maximize-success-on-campaigns-9lzja
+- id: industry-membership
+  name: Industry body membership (not a technical conformance claim)
+  conforms: false
+  conforms_note: membership-only
+  evidence: >-
+    Firefly's advertising-solutions page displays MOOHA, Geopath, DPAA, OAAA and IAB
+    affiliations. Membership of a standards or trade body is recorded here for context
+    only; it is not evidence that any specification is implemented, and it is
+    deliberately NOT wired to a Compliance pointer.
+  sources:
+  - https://www.fireflyon.com/advertising-solutions
+certifications: []
+certifications_note: >-
+  No SOC 2, ISO 27001, PCI DSS, HIPAA or FedRAMP attestation is published on any Firefly
+  property, and probe-security-programs.py returned vdp=none trust=none. No trust center
+  exists at trust.fireflyon.com or on the marketing site. No Compliance pointer is
+  emitted in apis.yml, because there is no published compliance program to point at.
+x-evidence:
+  fetched: '2026-08-12'
+  probes:
+  - url: https://auth.fireflyon.com/.well-known/openid-configuration
+    status: 200
+  - url: https://auth.fireflyon.com/.well-known/oauth-authorization-server
+    status: 200
+  - url: https://app-gw.api.fireflyon.com/openapi.json
+    status: 404
+  - url: https://app-gw.api.fireflyon.com/graphql
+    status: 404
+  - url: https://app-gw.api.fireflyon.com/.well-known/oauth-protected-resource
+    status: 404
+  - url: https://www.fireflyon.com/.well-known/security.txt
+    status: 404
+  - url: https://www.fireflyon.com/advertising-solutions
+    status: 200

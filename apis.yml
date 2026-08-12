@@ -1,15 +1,23 @@
 aid: firefly
 accessModel:
-  pricing: unknown
-  onboarding: unknown
+  pricing: contact-sales
+  onboarding: sales-only
   trial: false
   try_now: false
   public: false
-  label: Unknown
-  confidence: low
-  source: []
-  generated: '2026-07-22'
-  method: derived
+  label: Contact Sales
+  confidence: high
+  source:
+  - https://www.fireflyon.com/contact
+  - https://www.fireflyon.com/advertising-solutions
+  - https://www.fireflyon.com/pricing
+  generated: '2026-08-12'
+  method: searched
+  note: >-
+    No pricing page (/pricing and /plans both 404), no self-serve signup, no free tier and
+    no trial. Media is bought through the Firefly sales team or as a negotiated
+    Programmatic Guaranteed / open-marketplace deal inside a third-party DOOH SSP. See
+    plans/firefly-plans-pricing.yml (plan_count 0).
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/firefly.png
 name: Firefly
 description: Firefly Systems Inc. is a data-first moving out-of-home (mOOH) advertising network
@@ -18,9 +26,11 @@ description: Firefly Systems Inc. is a data-first moving out-of-home (mOOH) adve
   thousands of GPS-connected screens delivers geo-targeted, contextual, and programmatic digital
   out-of-home (DOOH) campaigns with advanced tracking, attribution, and measurement. Firefly offers
   digital and static car tops, full and partial car wraps, in-car TaxiTV, around-car activations, and
-  experiential LED and hologram truck formats, and supports programmatic buying through its VIOOH
-  integration. The company is backed by investors including 500 Global, Andreessen Horowitz (a16z),
-  and GV (Google Ventures).
+  experiential LED and hologram truck formats. Programmatic demand reaches Firefly inventory through
+  third-party DOOH supply-side platforms rather than a Firefly endpoint — its own advertising-solutions
+  page names Place Exchange, Vistar Media, Hivestack and Broadsign, alongside a VIOOH integration, and
+  supports Programmatic Guaranteed and open-marketplace deals. The company is backed by investors
+  including 500 Global, Andreessen Horowitz (a16z), and GV (Google Ventures).
 url: https://raw.githubusercontent.com/api-evangelist/firefly/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -32,7 +42,7 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-19'
+modified: '2026-08-12'
 tags:
 - Company
 - Advertising
@@ -63,8 +73,56 @@ common:
   url: https://fireflyon.com/advertising-terms-and-conditions
 - type: DomainSecurity
   url: security/firefly-domain-security.yml
+- type: HelpCenter
+  url: https://support.fireflyon.com/hc/en-us
+- type: Login
+  url: https://app.fireflyon.com
+- type: WellKnown
+  url: well-known/firefly-well-known.yml
+- type: OpenIDConnect
+  url: well-known/firefly-openid-configuration.json
+- type: Authentication
+  url: authentication/firefly-authentication.yml
+- type: OAuthScopes
+  url: scopes/firefly-scopes.yml
+- type: Conformance
+  url: conformance/firefly-conformance.yml
+- type: Lifecycle
+  url: lifecycle/firefly-lifecycle.yml
+- type: LLMsTxt
+  url: llms/firefly-llms.txt
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-12'
+  status: minimal
+  artifacts_added: 7
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
+  note: >-
+    Round 2. Contract discovery widened from 4 hosts to 8 and still found no Firefly
+    OpenAPI, GraphQL, AsyncAPI, MCP server or agent card. The only machine-readable
+    documents Firefly serves are the OIDC/RFC 8414 metadata on its Auth0 custom domain,
+    which now back the authentication/ and scopes/ artifacts. plans/ and rate-limits/
+    record measured zeros and deliberately carry NO pointer, since a pointer would assert
+    a surface the provider does not publish.
+x-coverage:
+  state: gated
+  reason: marketplace-only
+  detail: >-
+    Firefly ships no developer site of its own — fireflyon.com/developers, /api, /docs and
+    /pricing all 404 and its 90-URL sitemap contains no reference page — and the only live
+    Firefly API host, the advertiser-dashboard gateway app-gw.api.fireflyon.com, answers
+    404 text/plain to every unauthenticated path including /openapi.json; the integration
+    surface a buyer actually programs against is Firefly's inventory listed inside
+    third-party DOOH SSPs (Place Exchange, Vistar Media, Hivestack, Broadsign, VIOOH),
+    whose OpenRTB contracts belong to those platforms rather than to Firefly.
+  evidence:
+  - url: https://app-gw.api.fireflyon.com/openapi.json
+    status: 404
+  - url: https://www.fireflyon.com/developers
+    status: 404
+  - url: https://www.fireflyon.com/sitemap.xml
+    status: 200
+  - url: https://www.fireflyon.com/advertising-solutions
+    status: 200
+  - url: https://auth.fireflyon.com/.well-known/openid-configuration
+    status: 200
+  checked: '2026-08-12'
